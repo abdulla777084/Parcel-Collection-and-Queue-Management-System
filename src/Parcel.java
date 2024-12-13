@@ -1,8 +1,9 @@
-public class Parcel {
+public class Parcel implements Comparable<Parcel> {
     private String parcelID;
     private ParcelStatus status;
     private int daysInDepot;
     private double weight, length, width, height;
+    private Customer customer;
     private static final long serialVersionUID = 1L;
 
     public Parcel(String parcelID, ParcelStatus status, int daysInDepot, double weight, double length, double width, double height) {
@@ -13,6 +14,17 @@ public class Parcel {
         this.length = length;
         this.width = width;
         this.height = height;
+    }
+
+    public Parcel(String parcelID, ParcelStatus status, int daysInDepot, double weight, double length, double width, double height, Customer customer) {
+        this.parcelID = parcelID;
+        this.status = status;
+        this.daysInDepot = daysInDepot;
+        this.weight = weight;
+        this.length = length;
+        this.width = width;
+        this.height = height;
+        this.customer = customer;
     }
 
     public String getParcelID() {return parcelID;}
@@ -43,9 +55,12 @@ public class Parcel {
 
     public void setHeight(double height) {this.height = height;}
 
-    // Override hashCode() based on parcelID
+    public Customer getCustomer() {return customer;}
+
+    public void setCustomer(Customer customer) {this.customer = customer;}
+
     @Override
-    public int hashCode() {return getParcelID().hashCode();}
+    public int compareTo(Parcel parcel) {return this.customer.getCustomerSurname().compareTo(parcel.customer.getCustomerSurname());}
 
     // Override equals() to compare parcels based on parcelID
     @Override
@@ -60,6 +75,16 @@ public class Parcel {
         return getParcelID().equals(parcel.getParcelID());
     }
 
+
+    //@Override
+    //public int hashCode() {return getParcelID().hashCode();}
+
+    @Override
+    public String toString() {
+        return parcelID + " " + status + " " + daysInDepot + " " + weight + " " + length + " " + width + " " + height + " " + customer;
+    }
+
+    /*
     @Override
     public String toString() {
         return "Parcel{" +
@@ -71,5 +96,7 @@ public class Parcel {
                 ", width=" + width +
                 ", height=" + height +
                 '}';
-    }
+    }*/
+
+
 }

@@ -1,6 +1,6 @@
 
 
-public class Customer  implements Comparable<Customer>{
+public class Customer implements Comparable<Customer>{
     private int queueNumber;
     private String CustomerName;
     private String CustomerSurname;
@@ -32,41 +32,33 @@ public class Customer  implements Comparable<Customer>{
 
     public void setParcel(Parcel parcel) {this.parcel = parcel;}
 
+    @Override
+    public int compareTo(Customer customer) {return this.parcel.getParcelID().compareTo(customer.parcel.getParcelID());}
+
     //without queueNumber
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) return true;
+
         if (obj == null || getClass() != obj.getClass()) return false;
 
         Customer customer = (Customer) obj;
 
         if (!getCustomerName().equals(customer.getCustomerName())) return false;
+
         if (!getCustomerSurname().equals(customer.getCustomerSurname())) return false;
-        return getParcel().equals(customer.getParcel());
+
+        return getParcel().getParcelID().equals(customer.getParcel().getParcelID());
     }
-    //without queueNumber
+    //@Override
+    //public int hashCode() {return getCustomerName().hashCode();}
+
     @Override
-    public int hashCode() {
-        int result = getCustomerName().hashCode();
-        result = 31 * result + getCustomerSurname().hashCode();
-        result = 31 * result + getParcel().hashCode();
-        return result;
+    public String toString()
+    {
+        return CustomerName + " " + CustomerSurname;
     }
-
-    /* //toString
-        @Override
-        public int hashCode() {
-            return this.toString().hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            return this.toString().equals(obj.toString());
-        }
-     */
-
 
     /*
     @Override
@@ -77,19 +69,7 @@ public class Customer  implements Comparable<Customer>{
                 ", CustomerSurname='" + CustomerSurname + '\'' +
                 ", parcel=" + parcel +
                 '}';
-    }
     */
 
 
-    @Override
-    public String toString()
-    {
-        return CustomerName + " " + CustomerSurname;
-    }
-
-    @Override
-    public int compareTo(Customer customer)
-    {
-        return CustomerSurname.compareTo(customer.CustomerSurname);
-    }
 }
