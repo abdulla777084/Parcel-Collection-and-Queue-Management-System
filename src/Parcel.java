@@ -6,16 +6,6 @@ public class Parcel implements Comparable<Parcel> {
     private Customer customer;
     private static final long serialVersionUID = 1L;
 
-    public Parcel(String parcelID, ParcelStatus status, int daysInDepot, double weight, double length, double width, double height) {
-        this.parcelID = parcelID;
-        this.status = status;
-        this.daysInDepot = daysInDepot;
-        this.weight = weight;
-        this.length = length;
-        this.width = width;
-        this.height = height;
-    }
-
     public Parcel(String parcelID, ParcelStatus status, int daysInDepot, double weight, double length, double width, double height, Customer customer) {
         this.parcelID = parcelID;
         this.status = status;
@@ -84,19 +74,7 @@ public class Parcel implements Comparable<Parcel> {
         return parcelID + " " + status + " " + daysInDepot + " " + weight + " " + length + " " + width + " " + height + " " + customer;
     }
 
-    /*
-    @Override
-    public String toString() {
-        return "Parcel{" +
-                "parcelID='" + parcelID + '\'' +
-                ", status=" + status +
-                ", daysInDepot=" + daysInDepot +
-                ", weight=" + weight +
-                ", length=" + length +
-                ", width=" + width +
-                ", height=" + height +
-                '}';
-    }*/
+
 
 
 }

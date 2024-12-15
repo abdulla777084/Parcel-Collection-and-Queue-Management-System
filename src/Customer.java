@@ -1,11 +1,11 @@
 
 
-public class Customer implements Comparable<Customer>{
+public class Customer {
     private int queueNumber;
     private String CustomerName;
     private String CustomerSurname;
-    private Parcel parcel;
-    public Customer(int queueNumber,String name, Parcel parcel)
+    private String parcelId;
+    public Customer(int queueNumber,String name,String parcelId)
     {
         this.queueNumber = queueNumber;
 
@@ -13,7 +13,7 @@ public class Customer implements Comparable<Customer>{
         this.CustomerName = temp[0];
         this.CustomerSurname = temp[1];
 
-        this.parcel = parcel;
+        this.parcelId = parcelId;
     }
 
     public int getQueueNumber() {return queueNumber;}
@@ -28,14 +28,13 @@ public class Customer implements Comparable<Customer>{
 
     public void setCustomerSurname(String customerSurname) {CustomerSurname = customerSurname;}
 
-    public Parcel getParcel() {return parcel;}
+    public String getFullName() {return CustomerName + " " + CustomerSurname;}
+    public String getParcelId() {return parcelId;}
 
-    public void setParcel(Parcel parcel) {this.parcel = parcel;}
+    public void setParcelId(String parcelId) {this.parcelId = parcelId;}
 
-    @Override
-    public int compareTo(Customer customer) {return this.parcel.getParcelID().compareTo(customer.parcel.getParcelID());}
+    //without queueNumber and parcelId
 
-    //without queueNumber
     @Override
     public boolean equals(Object obj)
     {
@@ -45,20 +44,15 @@ public class Customer implements Comparable<Customer>{
 
         Customer customer = (Customer) obj;
 
-        if (!getCustomerName().equals(customer.getCustomerName())) return false;
-
-        if (!getCustomerSurname().equals(customer.getCustomerSurname())) return false;
-
-        return getParcel().getParcelID().equals(customer.getParcel().getParcelID());
+        return getCustomerName().equals(customer.getCustomerName())
+               && getCustomerSurname().equals(customer.getCustomerSurname());
     }
-    //@Override
-    //public int hashCode() {return getCustomerName().hashCode();}
 
     @Override
-    public String toString()
-    {
-        return CustomerName + " " + CustomerSurname;
-    }
+    public int hashCode() {return getCustomerName().hashCode() + getCustomerSurname().hashCode();}
+
+    @Override
+    public String toString() {return getFullName() + " : " + getParcelId();}
 
     /*
     @Override
@@ -67,9 +61,10 @@ public class Customer implements Comparable<Customer>{
                 "queueNumber=" + queueNumber +
                 ", CustomerName='" + CustomerName + '\'' +
                 ", CustomerSurname='" + CustomerSurname + '\'' +
-                ", parcel=" + parcel +
-                '}';
+                ", parcel=" + parcelId +
+                '}'; }
     */
+
 
 
 }

@@ -1,8 +1,8 @@
 import java.util.*;
 public class QueueOfCustomers {
-    private final TreeSet<Customer> customers;
+    private final HashSet<Customer> customers;
 
-    public QueueOfCustomers() {customers = new TreeSet<>();}
+    public QueueOfCustomers() {customers = new HashSet<>();}
     public void addCustomer(Customer customer) {customers.add(customer);}
     public void removeCustomer(Customer customer) {customers.removeIf(temp -> temp.equals(customer));}
 
@@ -29,7 +29,7 @@ public class QueueOfCustomers {
 
     }
 
-    public StringBuilder searchParcelsByCustomer(String name) {
+    public StringBuilder searchParcelsByCustomerName(String name) {
         StringBuilder result = new StringBuilder();
         if(!customers.isEmpty()) {
             for (Customer customer : customers) {
@@ -38,7 +38,7 @@ public class QueueOfCustomers {
                 String fullName = customer.getCustomerSurname().toLowerCase() + " " + customer.getCustomerName().toLowerCase();
 
                 if (fullName.contains(customerName)) {
-                    result.append(customer.getParcel()).append("\n");
+                    result.append(customer.getParcelId()).append("\n"); //should be toString
                 }
             }
         }
