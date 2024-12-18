@@ -50,7 +50,7 @@ public class Parcel implements Comparable<Parcel> {
     public void setCustomer(Customer customer) {this.customer = customer;}
 
     @Override
-    public int compareTo(Parcel parcel) {return this.customer.getCustomerSurname().compareTo(parcel.customer.getCustomerSurname());}
+    public int compareTo(Parcel parcel) {return getCustomer().getCustomerSurname().compareTo(parcel.getCustomer().getCustomerSurname());}
 
     // Override equals() to compare parcels based on parcelID
     @Override
@@ -65,16 +65,9 @@ public class Parcel implements Comparable<Parcel> {
         return getParcelID().equals(parcel.getParcelID());
     }
 
-
-    //@Override
-    //public int hashCode() {return getParcelID().hashCode();}
-
     @Override
     public String toString() {
         return parcelID + " " + status + " " + daysInDepot + " " + weight + " " + length + " " + width + " " + height + " " + customer;
     }
-
-
-
 
 }

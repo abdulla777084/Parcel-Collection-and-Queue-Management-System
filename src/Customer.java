@@ -2,17 +2,16 @@
 
 public class Customer {
     private int queueNumber;
-    private String CustomerName;
-    private String CustomerSurname;
+    private String customerName;
+    private String customerSurname;
     private String parcelId;
-    public Customer(int queueNumber,String name,String parcelId)
+
+
+    public Customer(int queueNumber,String CustomerName,String CustomerSurname,String parcelId)
     {
         this.queueNumber = queueNumber;
-
-        String[] temp = name.split(" ");
-        this.CustomerName = temp[0];
-        this.CustomerSurname = temp[1];
-
+        this.customerName = CustomerName;
+        this.customerSurname = CustomerSurname;
         this.parcelId = parcelId;
     }
 
@@ -20,21 +19,22 @@ public class Customer {
 
     public void setQueueNumber(int queueNumber) {this.queueNumber = queueNumber;}
 
-    public String getCustomerName() {return CustomerName;}
+    public String getCustomerName() {return customerName;}
 
-    public void setCustomerName(String customerName) {CustomerName = customerName;}
+    public void setCustomerName(String customerName) {this.customerName = customerName;}
 
-    public String getCustomerSurname() {return CustomerSurname;}
+    public String getCustomerSurname() {return customerSurname;}
 
-    public void setCustomerSurname(String customerSurname) {CustomerSurname = customerSurname;}
+    public void setCustomerSurname(String customerSurname) {this.customerSurname = customerSurname;}
 
-    public String getFullName() {return CustomerName + " " + CustomerSurname;}
+    public String getFullName() {return customerName + " " + customerSurname;}
+
     public String getParcelId() {return parcelId;}
 
     public void setParcelId(String parcelId) {this.parcelId = parcelId;}
 
-    //without queueNumber and parcelId
 
+    //without queueNumber and parcelId
     @Override
     public boolean equals(Object obj)
     {
@@ -48,22 +48,13 @@ public class Customer {
                && getCustomerSurname().equals(customer.getCustomerSurname());
     }
 
-    @Override
-    public int hashCode() {return getCustomerName().hashCode() + getCustomerSurname().hashCode();}
 
     @Override
-    public String toString() {return getFullName() + " : " + getParcelId();}
+    public int hashCode() {return Integer.hashCode(getQueueNumber());}
 
-    /*
     @Override
-    public String toString() {
-        return "Customer{" +
-                "queueNumber=" + queueNumber +
-                ", CustomerName='" + CustomerName + '\'' +
-                ", CustomerSurname='" + CustomerSurname + '\'' +
-                ", parcel=" + parcelId +
-                '}'; }
-    */
+    public String toString() {return queueNumber + " " + customerName + " " + customerSurname + " " + parcelId;}
+
 
 
 
