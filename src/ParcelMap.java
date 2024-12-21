@@ -18,7 +18,7 @@ public class ParcelMap {
         return parcels.size();
     }
 
-    public Parcel searchByParcelId(String parcelId) {
+    public Parcel searchParcelByParcelId(String parcelId) {
         for (Parcel parcel : parcels) {
             if (parcel.getParcelID().equals(parcelId)) {
                 return parcel;
@@ -39,54 +39,10 @@ public class ParcelMap {
         return allParcels;
     }
 
-    // Method to load parcels from a file
-    public void readFromFile(File file, QueueOfCustomers queueOfCustomers) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String inputLine = reader.readLine().trim();
-
-            while (inputLine != null && !inputLine.isEmpty()) {
-
-                processLine(inputLine, queueOfCustomers);
-
-                inputLine = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {e.printStackTrace();}
+    public TreeSet<Parcel> getParcels() {return parcels;}
 
 
 
-    }
-
-    private void processLine(String inputLine, QueueOfCustomers queueOfCustomers) {
-
-        String[] data = inputLine.split(",");
-        // Assuming you already have a Customer object
-
-
-
-
-
-        String parcelID = data[0].trim();
-        int daysInDepot = Integer.parseInt(data[1].trim());
-        double weight = Double.parseDouble(data[2].trim());
-        double length = Double.parseDouble(data[3].trim());
-        double width = Double.parseDouble(data[4].trim());
-        double height = Double.parseDouble(data[5].trim());
-
-        Customer customer = queueOfCustomers.searchCustomerByParcelId(parcelID);
-
-        if (customer == null) {
-            System.out.println("No customer found with parcel ID: " + parcelID);
-            return;
-        }
-
-        Parcel parcel = new Parcel(parcelID, ParcelStatus.FOR_COLLECTION, daysInDepot, weight, length, width, height, customer);
-        addParcel(parcel);
-
-
-
-    }
 
 }
 

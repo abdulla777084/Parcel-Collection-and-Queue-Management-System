@@ -1,10 +1,9 @@
-import java.io.*;
 import java.util.*;
 public class QueueOfCustomers {
     private final HashSet<Customer> customers;
-    private int queueNumber;
 
-    public QueueOfCustomers() {customers = new HashSet<>();queueNumber = 1;}
+
+    public QueueOfCustomers() {customers = new HashSet<>();}
     public void addCustomer(Customer customer) {customers.add(customer);}
     public void removeCustomer(Customer customer) {customers.removeIf(temp -> temp.equals(customer));}
 
@@ -31,7 +30,7 @@ public class QueueOfCustomers {
 
     }
 
-    public Customer searchCustomerByParcelId(String parcelId) {
+    public Customer searchForCustomerByParcelId(String parcelId) {
         for (Customer customer : customers) {
             if (customer.getParcelId().equals(parcelId)) {
                 return customer;
@@ -54,42 +53,11 @@ public class QueueOfCustomers {
         return allCustomers.toString();
     }
 
-
     public HashSet<Customer> getCustomers() {return customers;}
 
-    public void readFromFile(File file) {
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String inputLine = reader.readLine();
 
-            while(inputLine != null && !inputLine.isEmpty()) {
 
-                processLine(inputLine);
-
-                inputLine = reader.readLine();
-            }
-            reader.close();
-        } catch(IOException e) {e.printStackTrace();}
-
-    }
-
-    private void processLine(String inputLine) {
-
-        String[] data = inputLine.split(",");
-
-        String[] nameParts = data[0].split(" ");
-
-        String name = nameParts[0].trim();
-        String surname = nameParts[1].trim();
-
-        String parcelId = data[1].trim();
-
-        Customer customer = new Customer(queueNumber,name,surname, parcelId);
-
-        addCustomer(customer);
-        queueNumber++;
-    }
 
 
 }

@@ -4,7 +4,6 @@ public class Parcel implements Comparable<Parcel> {
     private int daysInDepot;
     private double weight, length, width, height;
     private Customer customer;
-    private static final long serialVersionUID = 1L;
 
     public Parcel(String parcelID, ParcelStatus status, int daysInDepot, double weight, double length, double width, double height, Customer customer) {
         this.parcelID = parcelID;
