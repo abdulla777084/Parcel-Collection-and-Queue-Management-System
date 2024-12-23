@@ -6,13 +6,8 @@ public class ManagerMain {
     private final ParcelMap parcelMap = new ParcelMap();
 
     public ManagerMain() {
-        read("Custs.csv", "Parcels.csv");
-
-        //place somewhere else
-        System.out.println(queueOfCustomers.printAllCustomers());
-        System.out.println(parcelMap.printAllParcels());
-        System.out.println(queueOfCustomers.searchByName("Ivan"));
-        System.out.println(parcelMap.searchParcelByParcelId("X064"));
+        read();
+        new Worker(queueOfCustomers, parcelMap);
     }
 
     //Manager class - this is your driver class where you instantiate QueueofCustomers, ParcelMap and your GUI.
@@ -26,12 +21,13 @@ public class ManagerMain {
 	    Manager interacts with the Log Singleton for event tracking.
     */
 
-    private void read(String customerFileName, String parcelFileName) {
-        readCustomersFromFile(customerFileName);
-        readParcelsFromFile(parcelFileName);
+    private void read() {
+        readCustomersFromFile("Custs.csv");
+        readParcelsFromFile("Parcels.csv");
     }
 
     private void readCustomersFromFile(String file) {
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String inputLine = reader.readLine();
@@ -61,31 +57,32 @@ public class ManagerMain {
     }
 
     private void readParcelsFromFile(String file) {
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String inputLine = reader.readLine().trim();
 
+
             while (inputLine != null && !inputLine.isEmpty()) {
 
                 String[] data = inputLine.split(",");
-                // Assuming you already have a Customer object
 
+                String parcelId = data[0].trim();
 
-                String parcelID = data[0].trim();
-                int daysInDepot = Integer.parseInt(data[1].trim());
-                double weight = Double.parseDouble(data[2].trim());
-                double length = Double.parseDouble(data[3].trim());
-                double width = Double.parseDouble(data[4].trim());
-                double height = Double.parseDouble(data[5].trim());
+                double weight = Double.parseDouble(data[1].trim());
+                double length = Double.parseDouble(data[2].trim());
+                double width = Double.parseDouble(data[3].trim());
+                double height = Double.parseDouble(data[4].trim());
+                int daysInDepot = Integer.parseInt(data[5].trim());
 
-                Customer customer = queueOfCustomers.searchForCustomerByParcelId(parcelID);
+                Customer customer = queueOfCustomers.searchForCustomerByParcelId(parcelId);
 
                 if (customer == null) {
-                    System.out.println("No customer found with parcel ID: " + parcelID);
+                    System.out.println("No customer found with parcel ID: " + parcelId);
                     return;
                 }
 
-                Parcel parcel = new Parcel(parcelID, ParcelStatus.FOR_COLLECTION, daysInDepot, weight, length, width, height, customer);
+                Parcel parcel = new Parcel(parcelId, ParcelStatus.FOR_COLLECTION, weight, length, width, height, daysInDepot, customer);
 
                 parcelMap.addParcel(parcel);
 
@@ -96,21 +93,22 @@ public class ManagerMain {
 
     }
 
+
+
     public static void main(String[] args) {
-        ManagerMain manager = new ManagerMain();
+        new ManagerMain();
     }
+
 
     //save file happens every time the program is closed or button "save" is clicked in the gui -> th same method will be triggered
     //output of iteration -> console + text file + gui
 
-
-
 }
 
     /*
-    //old test data before GUI
+    //OLD TEST DATA for Main class for Console tests before GUI
 
-    read & write data from files
+    //read & write data from files
     queueOfCustomers.readFromFile(new File("Custs.csv"));
     parcelMap.readFromFile(new File("Parcels.csv"), queueOfCustomers);
 
@@ -127,8 +125,25 @@ public class ManagerMain {
     parcelMap.addParcel(parcel);
     parcelMap.addParcel(parcel2);
     parcelMap.addParcel(parcel3);
+
     QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
     queueOfCustomers.addCustomer(customer1);
     queueOfCustomers.addCustomer(customer2);
     queueOfCustomers.addCustomer(customer3);
+
+    System.out.println(queueOfCustomers.printAllCustomers());
+    System.out.println(parcelMap.printAllParcels());
+    System.out.println(queueOfCustomers.searchByName("Ivan"));
+    System.out.println(parcelMap.searchParcelByParcelId("X064"));
+
+    System.out.println(parcelMap.getParcels());
+
+    while (!queueOfCustomers.getCustomers().isEmpty()) {
+    System.out.println("Processing next customer in queue...");
+    worker.processCustomer();
+    System.out.println(queueOfCustomers.getCustomers());
+    }
+
+    worker.generateReport("Report.txt");
+
     */

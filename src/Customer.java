@@ -1,11 +1,8 @@
-
-
 public class Customer {
     private int queueNumber;
     private String customerName;
     private String customerSurname;
     private String parcelId;
-
 
     public Customer(int queueNumber,String CustomerName,String CustomerSurname,String parcelId)
     {
@@ -33,7 +30,6 @@ public class Customer {
 
     public void setParcelId(String parcelId) {this.parcelId = parcelId;}
 
-
     //without queueNumber and parcelId
     @Override
     public boolean equals(Object obj)
@@ -48,12 +44,8 @@ public class Customer {
                && getCustomerSurname().equals(customer.getCustomerSurname());
     }
 
-
     @Override
-    public int hashCode() {return Integer.hashCode(getQueueNumber());}
-
-    @Override
-    public String toString() {return queueNumber + " " + customerName + " " + customerSurname + " " + parcelId;}
+    public String toString() {return queueNumber + ", " + customerName + " " + customerSurname + ", " + parcelId;}
 
 
 

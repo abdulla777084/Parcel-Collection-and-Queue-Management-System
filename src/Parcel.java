@@ -1,18 +1,20 @@
 public class Parcel implements Comparable<Parcel> {
     private String parcelID;
     private ParcelStatus status;
-    private int daysInDepot;
     private double weight, length, width, height;
+    private int daysInDepot;
     private Customer customer;
 
-    public Parcel(String parcelID, ParcelStatus status, int daysInDepot, double weight, double length, double width, double height, Customer customer) {
+    public Parcel(String parcelID, ParcelStatus status, double weight, double length, double width, double height,
+                  int daysInDepot, Customer customer)
+    {
         this.parcelID = parcelID;
         this.status = status;
-        this.daysInDepot = daysInDepot;
         this.weight = weight;
         this.length = length;
         this.width = width;
         this.height = height;
+        this.daysInDepot = daysInDepot;
         this.customer = customer;
     }
 
@@ -23,10 +25,6 @@ public class Parcel implements Comparable<Parcel> {
     public ParcelStatus getStatus() {return status;}
 
     public void setStatus(ParcelStatus status) {this.status = status;}
-
-    public int getDaysInDepot() {return daysInDepot;}
-
-    public void setDaysInDepot(int daysInDepot) {this.daysInDepot = daysInDepot;}
 
     public double getWeight() {return weight;}
 
@@ -44,14 +42,24 @@ public class Parcel implements Comparable<Parcel> {
 
     public void setHeight(double height) {this.height = height;}
 
+    public int getDaysInDepot() {return daysInDepot;}
+
+    public void setDaysInDepot(int daysInDepot) {this.daysInDepot = daysInDepot;}
+
     public Customer getCustomer() {return customer;}
 
     public void setCustomer(Customer customer) {this.customer = customer;}
 
     @Override
-    public int compareTo(Parcel parcel) {return getCustomer().getCustomerSurname().compareTo(parcel.getCustomer().getCustomerSurname());}
+    public int compareTo(Parcel parcel) {
 
-    // Override equals() to compare parcels based on parcelID
+        //Combining customer surname and parcel id into a single string for comparison
+        String thisCompareString = this.getCustomer().getCustomerSurname() + this.getParcelID();
+        String otherCompareString = parcel.getCustomer().getCustomerSurname() + parcel.getParcelID();
+
+        return thisCompareString.compareTo(otherCompareString);
+    }
+
     @Override
     public boolean equals(Object obj) {
 
@@ -66,7 +74,10 @@ public class Parcel implements Comparable<Parcel> {
 
     @Override
     public String toString() {
-        return parcelID + " " + status + " " + daysInDepot + " " + weight + " " + length + " " + width + " " + height + " " + customer;
+        return parcelID + ", " + status + ", "
+                + weight + ", " + length + ", "
+                + width + ", " + height + ", "
+                + daysInDepot + ", " + customer.getFullName();
     }
 
 }

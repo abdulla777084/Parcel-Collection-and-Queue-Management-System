@@ -24,8 +24,6 @@ public class GUI {
     //Additionally, you should use the MVC pattern to structure your GUI components.
     //The GUI must be built using Swing components (buttons, panels, Frames, etc) to support responsive use of the features of your system
 
-
-
-
+    //exit after processing all customers and writing outputs to reports - action listener
 
 }
