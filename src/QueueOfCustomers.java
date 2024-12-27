@@ -1,10 +1,18 @@
 import java.util.*;
 public class QueueOfCustomers {
+
     private final LinkedList<Customer> customers;
+    private static int nextQueueNumber = 1;
 
     public QueueOfCustomers() {customers = new LinkedList<>();}
-    public void addCustomer(Customer customer) {customers.add(customer);}
-    public void removeCustomer(Customer customer) {if (customer != null) {customers.remove(customer);}}
+
+    public void addCustomer(Customer customer) {
+        customer.setQueueNumber(nextQueueNumber++);
+        customers.add(customer);}
+
+    public void removeCustomer(Customer customer) {
+        if (customer != null) {
+            customers.remove(customer);}}
 
     public int getNumberOfParcels() {return customers.size();}
 
@@ -37,7 +45,6 @@ public class QueueOfCustomers {
         }
         return null;
     }
-
 
     public String printAllCustomers() {
 

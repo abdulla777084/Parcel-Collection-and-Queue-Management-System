@@ -1,4 +1,3 @@
-import java.util.HashSet;
 import java.util.TreeSet;
 
 public class ParcelMap {
@@ -6,26 +5,21 @@ public class ParcelMap {
     private final TreeSet<Parcel> parcels;
 
     public ParcelMap() {parcels = new TreeSet<>();}
-    public void addParcel(Parcel parcel) {parcels.add(parcel);
-        //System.out.println("Added parcel: " + parcel);
-        //System.out.println("get parcel that was added: " + searchParcelByParcelId(parcel.getParcelID()) + "\n");
-        }
+
+    public void addParcel(Parcel parcel) {parcels.add(parcel);}
+
     public void removeParcel(Parcel parcel) {if (parcel != null) {parcels.remove(parcel);}}
 
-    public int getNumberOfParcels() {
-        return parcels.size();
-    }
+    public int getNumberOfParcels() {return parcels.size();}
 
     public Parcel searchParcelByParcelId(String parcelId) {
-
         for (Parcel parcel : parcels) {
-            //System.out.println("Checking parcel with ID: " + parcel.getParcelID());
-            if (parcel.getParcelID().equals(parcelId)) {
-                //System.out.println("Parcel found: " + parcel);
+
+            if (parcel.getParcelId().equals(parcelId)) {
+
                 return parcel;
             }
         }
-        //System.out.println("No parcel found with ID: " + parcelId);
         return null;
     }
 
@@ -40,7 +34,7 @@ public class ParcelMap {
                 }
             }
         }
-        else { allCollectedParcels.append("\n").append("There are no customers in the queue"); }
+        else { allCollectedParcels.append("\n").append("There are no customers in the queue to collect parcels"); }
 
         return allCollectedParcels;
     }
@@ -63,19 +57,19 @@ public class ParcelMap {
                 allParcelsForCollection.append("There are no parcels for collection.\n");
             }
         }
-        else { allParcelsForCollection.append("\n").append("There are no customers in the queue"); }
+        else { allParcelsForCollection.append("\n").append("There are no parcels for collection"); }
 
         return allParcelsForCollection;
     }
 
-    public StringBuilder printAllParcels() {
-        StringBuilder allParcels = new StringBuilder();
+    public String printAllParcels() {
+        String allParcels = "";
 
         if(!parcels.isEmpty()) {
 
-            for (Parcel parcel  : parcels) { allParcels.append(parcel.toString()).append("\n"); } }
+            for (Parcel parcel : parcels) { allParcels = allParcels + parcel.toString() + "\n"; } }
 
-        else { allParcels.append("\n").append("There are no customers in the queue"); }
+        else { allParcels = allParcels +"\n"+"There are no customers in the queue"; }
 
         return allParcels;
     }

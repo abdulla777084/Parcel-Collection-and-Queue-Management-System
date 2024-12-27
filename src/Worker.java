@@ -2,29 +2,16 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-    /*
-    //saveLog to text file = write the event log to file
-    private void logCollectionEvent(Customer customer, Parcel parcel, double fee) {
-        String logMessage = String.format("Customer %s %s collected parcel %s. Fee: %.2f", customer.toString(), fee);
 
-        writeLogToFile("logFile.txt", logMessage);
-    }
-
-    private void writeLogToFile(String fileName, String message) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(message);
-            writer.newLine();
-        } catch (IOException e) {e.printStackTrace();}
-    }
-    */
 public class Worker {
 
     //Worker class - to contain the logic for a worker processing a customer, calculating the fee, and releasing the parcel == marking parcel as collected;
     private final QueueOfCustomers queueOfCustomers;
     private final ParcelMap parcelMap;
-    private final Log log = Log.getInstance();
 
+    //private final Log log = Log.getInstance();
     private double totalFees = 0.0;
+
     public Worker(QueueOfCustomers queueOfCustomers, ParcelMap parcelMap) {
         this.queueOfCustomers = queueOfCustomers;
         this.parcelMap = parcelMap;
@@ -37,6 +24,7 @@ public class Worker {
     public void addNewParcel(Parcel parcel) {parcelMap.addParcel(parcel); }
     public void removeParcel(Parcel parcel) {parcelMap.removeParcel(parcel); }
 
+
     //Process each customer one by one(queue -> process customer -> complete parcel collection -> move to the next customer), updating the list of parcels in the warehouse in memory, and write a report to a text file (generate info and save it to text file after the iteration with counts).
     //processCustomer()
         //identify and retrieve the customer's parcel from the list of parcels by id
@@ -47,38 +35,58 @@ public class Worker {
             //remove customer from queue once the parcel is collected
     public void processCustomer() {
 
-        if (!queueOfCustomers.getCustomers().isEmpty()) {
+        if (!getQueueOfCustomers().getCustomers().isEmpty()) {
 
             //Get the customer
-            Customer customer = queueOfCustomers.getCustomers().peek();
+            Customer customer = getQueueOfCustomers().getCustomers().peek();
 
             if (customer != null) {
 
+                if (!getParcelMap().getParcels().isEmpty()) {
 
-                //Get the parcel associated with the customer
-                Parcel parcel = parcelMap.searchParcelByParcelId(customer.getParcelId());
-                //Check if the parcel is valid and not collected
+                    //Get the parcel associated with the customer
+                    Parcel parcel = getParcelMap().searchParcelByParcelId(customer.getParcelId());
+                    //Check if the parcel is valid and not collected
 
-                if (parcel != null && parcel.getStatus() == ParcelStatus.FOR_COLLECTION) {
+                    if (parcel != null && parcel.getStatus() == ParcelStatus.FOR_COLLECTION) {
 
-                    //Calculate the fee
-                    double fee = calculateFee(parcel);
+                        //Calculate the fee
+                        double fee = calculateFee(parcel);
 
-                    //Update the total fees
-                    totalFees += fee;
+                        //Update the total fees
+                        totalFees += fee;
 
-                    //Release parcel
-                    releaseParcel(parcel);
+                        //Release parcel
+                        releaseParcel(parcel);
 
-                    //Log the collection event
-                    /**logCollectionEvent(customer, parcel, fee);*/
+                        //Log the collection event
+                        /**logCollectionEvent(customer, parcel, fee);*/
 
-                    //Remove the customer from the queue
-                    removeCustomer(customer);
+                        //Remove the customer from the queue
+                        removeCustomer(customer);
+                    }
                 }
             }
         }
     }
+    public Parcel getCurrentParcel() {
+
+        if (!getQueueOfCustomers().getCustomers().isEmpty()) {
+
+            Customer customer = getQueueOfCustomers().getCustomers().peek();
+
+            if (customer != null) {
+
+                if (!getParcelMap().getParcels().isEmpty()) {
+
+                    return getParcelMap().searchParcelByParcelId(customer.getParcelId());
+
+                }
+            }
+        }
+        return null;
+    }
+
 
     public void releaseParcel(Parcel parcel) {parcel.setStatus(ParcelStatus.COLLECTED);}
 
@@ -91,18 +99,24 @@ public class Worker {
         double daysFee = calculateDaysFee(parcel.getDaysInDepot());
 
         double totalFee = baseFee + weightFee + dimensionFee + daysFee;
+        double finalFee = applyDiscount(totalFee, parcel);
 
-        return applyDiscount(totalFee, parcel);
+
+        return Double.parseDouble(String.format("%.2f", finalFee));
     }
 
+        public QueueOfCustomers getQueueOfCustomers() {return queueOfCustomers;}
+
+        public ParcelMap getParcelMap() {return parcelMap;}
+
     //write/save report to text file after the iteration with counts = generate report
-    //list collected parcels + fee of each parcel that was collected (list of collected parcels including the fee)
-    //list for collection parcels (list of uncollected parcels)
+        //list collected parcels + fee of each parcel that was collected (list of collected parcels including the fee)
+        //list for collection parcels (list of uncollected parcels)
 
-    //counts (how many parcels were in the depot > more than a certain number of days) if daysInDepot > certain number then -> count++
-    //totals (how much was collected on fees (sumOfFees()) on a certain day(for each iteration) (fees += fees) ) more like that of your choice
+        //counts (how many parcels were in the depot > more than a certain number of days) if daysInDepot > certain number then -> count++
+        //totals (how much was collected on fees (sumOfFees()) on a certain day(for each iteration) (fees += fees) ) more like that of your choice
 
-    //Save the report to a file
+        //Save the report to a file
     public void generateReport(String filename) {
 
         String output = "Collected Parcels and Fees:\n" + getCollectedParcelsWithFee() + "\n" +
@@ -111,17 +125,25 @@ public class Worker {
 
                 "Count of Parcels in Depot with the longest amount of days: " + getCountOfParcelsWithMaxDays() + "\n" +
 
-                "Total Fees Collected: " + totalFees + " £\n";
+                "Total Fees Collected: " + String.format("%.2f", totalFees) + " £\n";
 
-        writeReportToFile(filename, output);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename)))
+        {
+            writer.write(output);
+        } catch (IOException e) {e.printStackTrace();}
+
+
     }
+
+
 
     /**
      *  Apply discount based on ParcelID range
      *  if the parcel ID is X100 or X300, apply a 15% discount
      */
     private double applyDiscount(double totalFee, Parcel parcel) {
-        String parcelId = parcel.getParcelID();
+        String parcelId = parcel.getParcelId();
         if (parcelId != null && (parcelId.equals("X100") || parcelId.equals("X300"))) {
             return totalFee * 0.85;
         }
@@ -155,7 +177,7 @@ public class Worker {
         return sizeFee;
     }
 
-    private double calculateDaysFee(int daysInDepot) {return 0.30 * daysInDepot;}
+    private double calculateDaysFee(int daysInDepot) {return 0.3 * daysInDepot;}
 
     private StringBuilder getCollectedParcelsWithFee() {
 
@@ -194,11 +216,7 @@ public class Worker {
         return count;
     }
 
-    private void writeReportToFile(String filename, String output) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write(output);
-        } catch (IOException e) {e.printStackTrace();}
-    }
+
 
 
 }

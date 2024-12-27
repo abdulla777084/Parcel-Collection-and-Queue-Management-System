@@ -2,37 +2,53 @@ import java.io.*;
 
 public class ManagerMain {
 
-    private final QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
-    private final ParcelMap parcelMap = new ParcelMap();
-
-    public ManagerMain() {
-        read();
-        new Worker(queueOfCustomers, parcelMap);
-    }
-
-    //Manager class - this is your driver class where you instantiate QueueofCustomers, ParcelMap and your GUI.
+    //Manager class - this is your driver class where you instantiate QueueofCustomers, ParcelMap and your WorkerGUI.
     //This is where you ideally read in your data files using suitable methods.- put methods of read files here ?
     //where do I put methods for write ? in the worker ?
     //write methods are only for parcel map not queue of customers
 
     /*
-
         Manager uses Worker, QueueOfCustomers, and ParcelMap.
 	    Manager interacts with the Log Singleton for event tracking.
     */
 
-    private void read() {
-        readCustomersFromFile("Custs.csv");
-        readParcelsFromFile("Parcels.csv");
+    private final QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
+    private final ParcelMap parcelMap = new ParcelMap();
+    private final Worker worker;
+
+    public ManagerMain() {
+        read();
+        worker = new Worker(queueOfCustomers, parcelMap);
+        new WorkerGUI(this);
     }
 
-    private void readCustomersFromFile(String file) {
+    public String getQueueOfCustomersInfo() {
+        return queueOfCustomers.printAllCustomers();
+    }
+    public String getParcelMapInfo() {
+        return parcelMap.printAllParcels();
+    }
+
+    public Worker getWorker() {
+        return worker;
+    }
+    public void processCustomer() {
+        worker.processCustomer();
+    }
+    public Parcel getCurrentParcel() {
+        return worker.getCurrentParcel();
+    }
+
+    private void read() {
+        readCustomersFromFile();
+        readParcelsFromFile();
+    }
+
+    private void readCustomersFromFile() {
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new FileReader("Custs.csv"));
             String inputLine = reader.readLine();
-
-            int queueNumber = 1;
 
             while(inputLine != null && !inputLine.isEmpty()) {
 
@@ -45,10 +61,9 @@ public class ManagerMain {
 
                 String parcelId = data[1].trim();
 
-                Customer customer = new Customer(queueNumber,name,surname, parcelId);
+                Customer customer = new Customer(name,surname, parcelId);
 
                 queueOfCustomers.addCustomer(customer);
-                queueNumber++;
 
                 inputLine = reader.readLine();
             }
@@ -56,10 +71,10 @@ public class ManagerMain {
         } catch(IOException e) {e.printStackTrace();}
     }
 
-    private void readParcelsFromFile(String file) {
+    private void readParcelsFromFile() {
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new FileReader("Parcels.csv"));
             String inputLine = reader.readLine().trim();
 
 
@@ -78,7 +93,7 @@ public class ManagerMain {
                 Customer customer = queueOfCustomers.searchForCustomerByParcelId(parcelId);
 
                 if (customer == null) {
-                    System.out.println("No customer found with parcel ID: " + parcelId);
+                    System.out.println("No customer found with parcel Id: " + parcelId);
                     return;
                 }
 
@@ -93,20 +108,33 @@ public class ManagerMain {
 
     }
 
-
-
     public static void main(String[] args) {
         new ManagerMain();
+
     }
 
 
-    //save file happens every time the program is closed or button "save" is clicked in the gui -> th same method will be triggered
-    //output of iteration -> console + text file + gui
+
+    /*
+    //saveLog to text file = write the event log to file
+    private void logCollectionEvent(Customer customer, Parcel parcel, double fee) {
+        String logMessage = String.format("Customer %s %s collected parcel %s. Fee: %.2f", customer.toString(), fee);
+
+        writeLogToFile("logFile.txt", logMessage);
+    }
+
+    private void writeLogToFile(String fileName, String message) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            writer.write(message);
+            writer.newLine();
+        } catch (IOException e) {e.printStackTrace();}
+    }
+    */
 
 }
 
     /*
-    //OLD TEST DATA for Main class for Console tests before GUI
+    //OLD TEST DATA for Main class for Console tests before WorkerGUI
 
     //read & write data from files
     queueOfCustomers.readFromFile(new File("Custs.csv"));

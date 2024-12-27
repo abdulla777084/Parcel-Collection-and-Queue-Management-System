@@ -1,5 +1,6 @@
 public class Log {
 
+        //LOG STUFF IS IN THE MANAGER NOT WORKER ?
     //log file - all events saved to text after iteration is over
 
     //Log class - to create a single log instance for containing log of events and related data.
@@ -19,3 +20,34 @@ public class Log {
 
 
 }
+
+/*
+        public class Log {
+    private static Log instance;
+    private StringBuilder logBuffer;
+
+    private Log() {
+        logBuffer = new StringBuilder();
+    }
+
+    public static Log getInstance() {
+        if (instance == null) {
+            instance = new Log();
+        }
+        return instance;
+    }
+
+    public void addEvent(String event) {
+        logBuffer.append(event).append("\n");
+    }
+
+    public void writeLogToFile(String filename) {
+        try {
+            Files.write(Paths.get(filename), logBuffer.toString().getBytes());
+        } catch (IOException e) {
+            System.err.println("Error writing log to file: " + e.getMessage());
+        }
+    }
+}
+
+*/

@@ -4,9 +4,8 @@ public class Customer {
     private String customerSurname;
     private String parcelId;
 
-    public Customer(int queueNumber,String CustomerName,String CustomerSurname,String parcelId)
+    public Customer(String CustomerName,String CustomerSurname,String parcelId)
     {
-        this.queueNumber = queueNumber;
         this.customerName = CustomerName;
         this.customerSurname = CustomerSurname;
         this.parcelId = parcelId;

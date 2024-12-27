@@ -1,14 +1,14 @@
 public class Parcel implements Comparable<Parcel> {
-    private String parcelID;
+    private String parcelId;
     private ParcelStatus status;
     private double weight, length, width, height;
     private int daysInDepot;
     private Customer customer;
 
-    public Parcel(String parcelID, ParcelStatus status, double weight, double length, double width, double height,
+    public Parcel(String parcelId, ParcelStatus status, double weight, double length, double width, double height,
                   int daysInDepot, Customer customer)
     {
-        this.parcelID = parcelID;
+        this.parcelId = parcelId;
         this.status = status;
         this.weight = weight;
         this.length = length;
@@ -18,9 +18,9 @@ public class Parcel implements Comparable<Parcel> {
         this.customer = customer;
     }
 
-    public String getParcelID() {return parcelID;}
+    public String getParcelId() {return parcelId;}
 
-    public void setParcelID(String parcelID) {this.parcelID = parcelID;}
+    public void setParcelId(String parcelId) {this.parcelId = parcelId;}
 
     public ParcelStatus getStatus() {return status;}
 
@@ -54,8 +54,8 @@ public class Parcel implements Comparable<Parcel> {
     public int compareTo(Parcel parcel) {
 
         //Combining customer surname and parcel id into a single string for comparison
-        String thisCompareString = this.getCustomer().getCustomerSurname() + this.getParcelID();
-        String otherCompareString = parcel.getCustomer().getCustomerSurname() + parcel.getParcelID();
+        String thisCompareString = this.getCustomer().getCustomerSurname() + this.getParcelId();
+        String otherCompareString = parcel.getCustomer().getCustomerSurname() + parcel.getParcelId();
 
         return thisCompareString.compareTo(otherCompareString);
     }
@@ -69,15 +69,15 @@ public class Parcel implements Comparable<Parcel> {
 
         Parcel parcel = (Parcel) obj;
 
-        return getParcelID().equals(parcel.getParcelID());
+        return getParcelId().equals(parcel.getParcelId());
     }
 
     @Override
     public String toString() {
-        return parcelID + ", " + status + ", "
-                + weight + ", " + length + ", "
-                + width + ", " + height + ", "
-                + daysInDepot + ", " + customer.getFullName();
+        return  parcelId + ", " + status + ", "
+                + weight + " kg(s), " + length + " x "
+                + width + " x " + height + " cm(s), "
+                + daysInDepot + " days, ordered by " + customer.getFullName();
     }
 
 }
