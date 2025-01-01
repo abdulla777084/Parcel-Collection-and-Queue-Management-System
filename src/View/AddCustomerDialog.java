@@ -1,18 +1,23 @@
+package View;
+
+import Model.Customer;
+import Controller.Worker;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddCustomerDialog extends JDialog {
-    private final ManagerMain managerMain;
+    private final Worker worker;
     private final JTextField txtCustomerName = new JTextField();
     private final JTextField txtCustomerSurname = new JTextField();
     private final JTextField txtParcelId = new JTextField();
 
-    public AddCustomerDialog(WorkerGUI workerGui, ManagerMain managerMain) {
+    public AddCustomerDialog(JFrame frame, Worker worker) {
 
-        super(workerGui, "Add Customer Dialog", true);
-        this.managerMain = managerMain;
+        super(frame, "Add Customer Dialog", true);
+        this.worker = worker;
 
         JPanel pnlCenter = new JPanel(new GridLayout(3, 2));
         JPanel pnlSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -38,28 +43,35 @@ public class AddCustomerDialog extends JDialog {
         setSize(320, 200);
         setResizable(false);
 
-
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void addCustomer() {
 
-        if (!txtCustomerName.getText().isEmpty() && !txtCustomerSurname.getText().isEmpty() && !txtParcelId.getText().isEmpty()) {
-            Customer customer = new Customer(txtCustomerName.getText(),
-                                             txtCustomerSurname.getText(),
-                                             txtParcelId.getText());
-            managerMain.getWorker().addNewCustomer(customer);
+        String name = txtCustomerName.getText().trim();
+        String surname = txtCustomerSurname.getText().trim();
+        String parcelId = txtParcelId.getText().trim();
+
+        if (!name.isEmpty() && !surname.isEmpty() && !parcelId.isEmpty()) {
+
+            Customer customer = new Customer(name, surname, parcelId);
+
+            worker.addNewCustomer(customer);
 
             JOptionPane.showMessageDialog(this,
-                    "Customer added successfully!", getTitle(), JOptionPane.INFORMATION_MESSAGE);
+                    "Customer added successfully!",
+                            getTitle(), JOptionPane.INFORMATION_MESSAGE
+            );
 
-            this.dispose();
+            dispose();
         }
 
         else {
             JOptionPane.showMessageDialog(this,
-                    "All fields must be filled!", getTitle(), JOptionPane.WARNING_MESSAGE);
+                    "All fields must be filled properly!",
+                            getTitle(), JOptionPane.WARNING_MESSAGE
+            );
         }
 
 

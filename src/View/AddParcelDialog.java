@@ -1,10 +1,16 @@
+package View;
+
+import Model.Customer;
+import Model.Parcel;
+import Controller.Worker;
+import Model.ParcelStatus;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class AddParcelDialog  extends JDialog {
-    private final ManagerMain managerMain;
+    private final Worker worker;
     private final JTextField txtParcelId = new JTextField();
     private final JSpinner spnStatus = new JSpinner(new SpinnerListModel(ParcelStatus.values()));
     private final JSpinner spnWeight = new JSpinner(new SpinnerNumberModel(1D, .1, 100D, 1D));
@@ -13,9 +19,9 @@ public class AddParcelDialog  extends JDialog {
     private final JSpinner spnHeight = new JSpinner(new SpinnerNumberModel(1D, .1, 100D, 1D));
     private final JSpinner spnDaysInDepot = new JSpinner(new SpinnerNumberModel(1, 1, 30, 1));
 
-    public AddParcelDialog(WorkerGUI workerGui, ManagerMain managerMain) {
+    public AddParcelDialog(WorkerGUI workerGui, Worker worker) {
         super(workerGui, "Add Parcel Dialog", true);
-        this.managerMain = managerMain;
+        this.worker = worker;
 
         JPanel pnlCenter = new JPanel(new GridLayout(7, 2));
         JPanel pnlSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -49,49 +55,60 @@ public class AddParcelDialog  extends JDialog {
         setSize(320, 400);
         setResizable(false);
 
-
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void addParcel() {
 
-        if (!txtParcelId.getText().isEmpty() && spnStatus.getValue() != null
-                                             && spnWeight.getValue() != null
-                                             && spnLength.getValue() != null
-                                             && spnWidth.getValue() != null
-                                             && spnHeight.getValue() != null
-                                             && spnDaysInDepot.getValue() != null) {
+        String parcelId = txtParcelId.getText().trim();
+        ParcelStatus status = (ParcelStatus) spnStatus.getValue();
+        double weight = (double) spnWeight.getValue();
+        double length = (double) spnLength.getValue();
+        double width = (double) spnWidth.getValue();
+        double height = (double) spnHeight.getValue();
+        int daysInDepot = (int) spnDaysInDepot.getValue();
 
-            Customer customer = managerMain.getWorker().getQueueOfCustomers().searchForCustomerByParcelId(txtParcelId.getText());
+        if (!parcelId.isEmpty() && status != null
+                                && weight > 0
+                                && length > 0
+                                && width > 0
+                                && height > 0
+                                && daysInDepot > 0) {
+
+            Customer customer = worker.getQueueOfCustomers().searchForCustomerByParcelId(txtParcelId.getText());
 
             if (customer != null) {
                 Parcel parcel = new Parcel(
-                        txtParcelId.getText(),
-                        (ParcelStatus) spnStatus.getValue(),
-                        (Double) spnWeight.getValue(),
-                        (Double) spnLength.getValue(),
-                        (Double) spnWidth.getValue(),
-                        (Double) spnHeight.getValue(),
-                        (Integer) spnDaysInDepot.getValue(),
+                        parcelId,
+                        status,
+                        weight,
+                        length,
+                        width,
+                        height,
+                        daysInDepot,
                         customer
                 );
 
-                managerMain.getWorker().addNewParcel(parcel);
+                worker.addNewParcel(parcel);
 
                 JOptionPane.showMessageDialog(this,
-                        "Parcel added successfully!", getTitle(), JOptionPane.INFORMATION_MESSAGE);
+                        "Parcel added successfully!",
+                        getTitle(), JOptionPane.INFORMATION_MESSAGE);
 
                 this.dispose();
 
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Customer doesn't exist!", getTitle(), JOptionPane.WARNING_MESSAGE);
+                        "Customer with parcel id " +
+                                parcelId + " doesn't exist!",
+                        getTitle(), JOptionPane.WARNING_MESSAGE);
             }
 
         } else {
             JOptionPane.showMessageDialog(this,
-                    "All fields must be filled!", getTitle(), JOptionPane.WARNING_MESSAGE);
+                    "All fields must be filled properly!",
+                    getTitle(), JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -120,5 +137,6 @@ public class AddParcelDialog  extends JDialog {
     }
 
 }
+
 
 

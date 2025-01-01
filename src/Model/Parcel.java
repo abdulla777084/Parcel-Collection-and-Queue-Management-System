@@ -1,3 +1,5 @@
+package Model;
+
 public class Parcel implements Comparable<Parcel> {
     private String parcelId;
     private ParcelStatus status;

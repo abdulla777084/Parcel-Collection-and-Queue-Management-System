@@ -1,42 +1,26 @@
+package Main;
+
+import Controller.Worker;
+import Model.*;
+import View.WorkerGUI;
+
 import java.io.*;
 
+/*
+    Manager class instantiates the QueueOfCustomers, ParcelMap and Worker classes.
+    Manager class also has suitable methods to read data from files.
+    Manager class  interacts with the Log Singleton for event tracking.
+*/
 public class ManagerMain {
-
-    //Manager class - this is your driver class where you instantiate QueueofCustomers, ParcelMap and your WorkerGUI.
-    //This is where you ideally read in your data files using suitable methods.- put methods of read files here ?
-    //where do I put methods for write ? in the worker ?
-    //write methods are only for parcel map not queue of customers
-
-    /*
-        Manager uses Worker, QueueOfCustomers, and ParcelMap.
-	    Manager interacts with the Log Singleton for event tracking.
-    */
-
     private final QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
     private final ParcelMap parcelMap = new ParcelMap();
-    private final Worker worker;
 
     public ManagerMain() {
         read();
-        worker = new Worker(queueOfCustomers, parcelMap);
-        new WorkerGUI(this);
-    }
 
-    public String getQueueOfCustomersInfo() {
-        return queueOfCustomers.printAllCustomers();
-    }
-    public String getParcelMapInfo() {
-        return parcelMap.printAllParcels();
-    }
+        Worker worker = new Worker(queueOfCustomers, parcelMap);
 
-    public Worker getWorker() {
-        return worker;
-    }
-    public void processCustomer() {
-        worker.processCustomer();
-    }
-    public Parcel getCurrentParcel() {
-        return worker.getCurrentParcel();
+        new WorkerGUI(worker);
     }
 
     private void read() {
@@ -92,15 +76,17 @@ public class ManagerMain {
 
                 Customer customer = queueOfCustomers.searchForCustomerByParcelId(parcelId);
 
-                if (customer == null) {
+                if (customer != null) {
+
+                    Parcel parcel = new Parcel(parcelId, ParcelStatus.FOR_COLLECTION, weight, length, width, height, daysInDepot, customer);
+
+                    parcelMap.addParcel(parcel);
+                }
+
+                else {
                     System.out.println("No customer found with parcel Id: " + parcelId);
                     return;
                 }
-
-                Parcel parcel = new Parcel(parcelId, ParcelStatus.FOR_COLLECTION, weight, length, width, height, daysInDepot, customer);
-
-                parcelMap.addParcel(parcel);
-
                 inputLine = reader.readLine();
             }
             reader.close();
@@ -117,8 +103,8 @@ public class ManagerMain {
 
     /*
     //saveLog to text file = write the event log to file
-    private void logCollectionEvent(Customer customer, Parcel parcel, double fee) {
-        String logMessage = String.format("Customer %s %s collected parcel %s. Fee: %.2f", customer.toString(), fee);
+    private void logCollectionEvent(Model.Customer customer, Model.Parcel parcel, double fee) {
+        String logMessage = String.format("Model.Customer %s %s collected parcel %s. Fee: %.2f", customer.toString(), fee);
 
         writeLogToFile("logFile.txt", logMessage);
     }
@@ -134,27 +120,27 @@ public class ManagerMain {
 }
 
     /*
-    //OLD TEST DATA for Main class for Console tests before WorkerGUI
+    //OLD TEST DATA for Main class for Console Output tests before View.WorkerGUI
 
     //read & write data from files
     queueOfCustomers.readFromFile(new File("Custs.csv"));
     parcelMap.readFromFile(new File("Parcels.csv"), queueOfCustomers);
 
     //place somewhere else
-    Customer customer1 = new Customer(1,"Ivan","Ivanov","X345");
-    Customer customer2 = new Customer(2,"Petr","Petrov","X567");
-    Customer customer3 = new Customer(3,"Vasily","Vasilev","X238");
+    Model.Customer customer1 = new Model.Customer(1,"Ivan","Ivanov","X345");
+    Model.Customer customer2 = new Model.Customer(2,"Petr","Petrov","X567");
+    Model.Customer customer3 = new Model.Customer(3,"Vasily","Vasilev","X238");
 
-    Parcel parcel = new Parcel("X345", ParcelStatus.FOR_COLLECTION, 20, 30.4, 5.0, 9.8, 10,customer1);
-    Parcel parcel2 = new Parcel("X567", ParcelStatus.FOR_COLLECTION, 20, 30.4, 5.0, 9.8, 10,customer2);
-    Parcel parcel3 = new Parcel("X238", ParcelStatus.FOR_COLLECTION, 20, 30.4, 5.0, 9.8, 10,customer3);
+    Model.Parcel parcel = new Model.Parcel("X345", Model.ParcelStatus.FOR_COLLECTION, 20, 30.4, 5.0, 9.8, 10,customer1);
+    Model.Parcel parcel2 = new Model.Parcel("X567", Model.ParcelStatus.FOR_COLLECTION, 20, 30.4, 5.0, 9.8, 10,customer2);
+    Model.Parcel parcel3 = new Model.Parcel("X238", Model.ParcelStatus.FOR_COLLECTION, 20, 30.4, 5.0, 9.8, 10,customer3);
 
-    ParcelMap parcelMap = new ParcelMap();
+    Model.ParcelMap parcelMap = new Model.ParcelMap();
     parcelMap.addParcel(parcel);
     parcelMap.addParcel(parcel2);
     parcelMap.addParcel(parcel3);
 
-    QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
+    Model.QueueOfCustomers queueOfCustomers = new Model.QueueOfCustomers();
     queueOfCustomers.addCustomer(customer1);
     queueOfCustomers.addCustomer(customer2);
     queueOfCustomers.addCustomer(customer3);

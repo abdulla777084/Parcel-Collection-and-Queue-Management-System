@@ -1,19 +1,28 @@
+package View;
+
+import Model.Customer;
+import Model.Parcel;
+import Controller.Worker;
+import Model.ParcelStatus;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
 public class WorkerGUI extends JFrame {
-    private final ManagerMain managerMain; //Log
-    private final JTable tblParcel = new JTable(), tblCustomer = new JTable();
+
+    private final Worker worker;
+    private final JTable tblParcel = new JTable();
+    private final JTable tblCustomer = new JTable();
     private final JLabel currentParcelLabel = new JLabel();
     private final JButton processCustomerButton = new JButton("Process Parcel");
     private final JButton addParcelButton = new JButton("Add Parcel");
     private final JButton addCustomerButton = new JButton("Add Customer");
     private final JButton saveButton = new JButton("Generate Output Report");
 
-    public WorkerGUI(ManagerMain managerMain) {
-        this.managerMain = managerMain;
+    public WorkerGUI(Worker worker) {
+        this.worker = worker;
 
         setTitle("Parcel Depot Management System");
         setSize(1800, 620);
@@ -25,21 +34,19 @@ public class WorkerGUI extends JFrame {
 
         JPanel customerPanel = new JPanel(new BorderLayout());
         customerPanel.setBorder(BorderFactory.createTitledBorder("Customer Queue"));
-
-        JScrollPane customerScroll = new JScrollPane(tblCustomer, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane customerScroll = new JScrollPane(tblCustomer,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         customerPanel.add(customerScroll, BorderLayout.CENTER);
 
         JPanel parcelPanel = new JPanel(new BorderLayout());
-        parcelPanel.setBorder(BorderFactory.createTitledBorder("Parcels still to be processed (For Collection)"));
-
-        JScrollPane parcelScroll = new JScrollPane(tblParcel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        parcelPanel.setBorder(BorderFactory.createTitledBorder("Parcels to be processed (For Collection)"));
+        JScrollPane parcelScroll = new JScrollPane(tblParcel,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         parcelPanel.add(parcelScroll, BorderLayout.CENTER);
 
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 0));
-        mainPanel.add(customerPanel);
-        mainPanel.add(parcelPanel);
+        JPanel listsPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        listsPanel.add(customerPanel);
+        listsPanel.add(parcelPanel);
 
         JPanel southPanel = new JPanel();
 
@@ -51,12 +58,17 @@ public class WorkerGUI extends JFrame {
         southPanel.add(currentParcelLabel);
         southPanel.add(processCustomerButton);
         southPanel.add(addCustomerButton);
-        addParcelButton.setEnabled(false); /* disable button that worker clicks on to add a new parcel
-                                              until a new customer who is supposed to collect that parcel is added to the queue */
+
+        /*
+            Initially, disable button that worker clicks on to add a new parcel until
+            a new customer, who will collect that parcel, is added to the queue
+        */
+        addParcelButton.setEnabled(false);
+
         southPanel.add(addParcelButton);
         southPanel.add(saveButton);
 
-        add(mainPanel, BorderLayout.CENTER);
+        add(listsPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
 
         updatePanels();
@@ -67,14 +79,16 @@ public class WorkerGUI extends JFrame {
 
     private void updatePanels() {
 
-        getUpdatedCustomerTableModel();
-        getUpdatedParcelTableModel();
+        setCustomerTableModel();
+        setParcelTableModel();
+
+        Parcel currentParcel = worker.getCurrentParcel();
 
         //Used HTML tags to make the output more readable
-        currentParcelLabel.setText("<html><b>Current Parcel Details:</b> " + managerMain.getCurrentParcel() + "</html>");
+        currentParcelLabel.setText("<html><b>Current Parcel Details:</b> " + currentParcel + "</html>");
     }
 
-    private void getUpdatedCustomerTableModel() {
+    private void setCustomerTableModel() {
 
         DefaultTableModel model = new DefaultTableModel();
 
@@ -83,7 +97,7 @@ public class WorkerGUI extends JFrame {
         model.addColumn("Customer Surname");
         model.addColumn("Parcel Id");
 
-        for (Customer customer : managerMain.getWorker().getQueueOfCustomers().getCustomers()) {
+        for (Customer customer : worker.getQueueOfCustomers().getCustomers()) {
             model.addRow(new Object[]{customer.getQueueNumber(),
                                       customer.getCustomerName(),
                                       customer.getCustomerSurname(),
@@ -93,7 +107,7 @@ public class WorkerGUI extends JFrame {
         tblCustomer.setModel(model);
     }
 
-    private void getUpdatedParcelTableModel() {
+    private void setParcelTableModel() {
 
         DefaultTableModel model = new DefaultTableModel();
 
@@ -104,51 +118,78 @@ public class WorkerGUI extends JFrame {
         model.addColumn("Days In Depot");
         model.addColumn("Customer Info");
 
-        for (Parcel parcel : managerMain.getWorker().getParcelMap().getParcels()) {
-            model.addRow(new Object[]{parcel.getParcelId(),
-                                      parcel.getStatus(),
-                                      parcel.getWeight() + " kg(s)",
-                                      parcel.getLength() + " x " +
-                                      parcel.getWidth() + " x " +
-                                      parcel.getHeight() + " cm(s)",
-                                      parcel.getDaysInDepot(),
-                                      parcel.getCustomer().getFullName()
-            });
+        for (Parcel parcel : worker.getParcelMap().getParcels()) {
+
+            if (parcel.getStatus() == ParcelStatus.FOR_COLLECTION) {
+
+                model.addRow(new Object[]{parcel.getParcelId(),
+                                          parcel.getStatus(),
+                                          parcel.getWeight() + " kg(s)",
+                                          parcel.getLength() + " x " +
+                                          parcel.getWidth() + " x " +
+                                          parcel.getHeight() + " cm(s)",
+                                          parcel.getDaysInDepot(),
+                                          parcel.getCustomer().getFullName()
+                });
+
+            }
 
         }
+
         tblParcel.setModel(model);
     }
-
-
 
     private void processCustomer() {
 
         //All the validations for customer and parcel are implemented within the processCustomer method
-        managerMain.processCustomer();
+        worker.processCustomer();
 
-        //Used HTML tags to make the output more readable
-        JOptionPane.showMessageDialog(this,
-                "<html><b>Parcel:</b> " + managerMain.getCurrentParcel()
-                        + "<br>" + "<br>" +"<b>Collection fee:</b> "
-                        + managerMain.getWorker().calculateFee(managerMain.getCurrentParcel())
-                        + " £</html>",
-                getTitle(),JOptionPane.INFORMATION_MESSAGE
-        );
+        Parcel currentParcel = worker.getCurrentParcel();
 
+        if (currentParcel != null) {
+
+            double collectionFee = worker.calculateFee(currentParcel);
+
+            //Used HTML tags to make the output more readable
+            JOptionPane.showMessageDialog(this,
+                    "<html><b>Parcel:</b> " + currentParcel +
+                            "<br>" + "<br>" +"<b>Collection fee:</b> " +
+                            collectionFee + " £</html>",
+                            getTitle(), JOptionPane.INFORMATION_MESSAGE
+            );
+
+        }
+
+        else {
+
+            JOptionPane.showMessageDialog(this,
+                    "No current parcel to process! All parcels have been collected.",
+                            getTitle(), JOptionPane.WARNING_MESSAGE
+            );
+        }
     }
 
-    private void addCustomer() {new AddCustomerDialog(this,managerMain);addParcelButton.setEnabled(true);}
+    private void addCustomer() {
+        new AddCustomerDialog(this,worker);
+        addParcelButton.setEnabled(true);} //Enable button that worker clicks on to add a new parcel
 
-    private void addParcel() {new AddParcelDialog(this,managerMain);addParcelButton.setEnabled(false);}
+    private void addParcel() {
+        new AddParcelDialog(this,worker);
+        addParcelButton.setEnabled(false);} //Disable button that worker clicks on to add a new parcel
 
-
+    /*
+        Save reports to text files:
+            generate information and save it to a text file when the window is closed or the save button is clicked
+            log is saved when the window is closed
+     */
     private void saveReport() {
 
-        JOptionPane.showMessageDialog(this,
-                "Successfully saved the operations.", getTitle(), JOptionPane.INFORMATION_MESSAGE
-        );
+        worker.generateReport("OutputReport.txt");
 
-        managerMain.getWorker().generateReport("OutputReport.txt");
+        JOptionPane.showMessageDialog(this,
+                "Successfully saved the operations to the text file(s) ",
+                        getTitle(), JOptionPane.INFORMATION_MESSAGE
+        );
 
         //managerMain.saveLog();  //Save the log
 
@@ -185,15 +226,10 @@ public class WorkerGUI extends JFrame {
         }
     }
 
-    //calls saveReport before closing the window
+    //Calls saveReport() when the window closes
     private class GUIWindowListener extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {saveReport(); }
     }
-
-
-
-
-
 }
 

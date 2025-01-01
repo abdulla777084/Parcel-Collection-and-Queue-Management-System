@@ -1,0 +1,36 @@
+Collected Parcels and Fees:
+X682, COLLECTED, 3.0 kg(s), 6.0 x 4.0 x 4.0 cm(s), 12 days, ordered by Blair Foster, Fee: 11.40 £
+X064, COLLECTED, 8.0 kg(s), 4.0 x 1.0 x 8.0 cm(s), 15 days, ordered by Ann Jones, Fee: 12.30 £
+X919, COLLECTED, 5.0 kg(s), 8.0 x 7.0 x 4.0 cm(s), 10 days, ordered by Andrew Robertson, Fee: 10.80 £
+
+Parcels For Collection:
+X009, FOR_COLLECTION, 9.0 kg(s), 1.0 x 9.0 x 9.0 cm(s), 7 days, ordered by John Brown
+X198, FOR_COLLECTION, 9.0 kg(s), 4.0 x 8.0 x 0.0 cm(s), 10 days, ordered by Mary Brown
+X552, FOR_COLLECTION, 4.0 kg(s), 5.0 x 7.0 x 8.0 cm(s), 12 days, ordered by Keith Burns
+X780, FOR_COLLECTION, 4.0 kg(s), 1.0 x 2.0 x 5.0 cm(s), 12 days, ordered by Bob Dawson
+X521, FOR_COLLECTION, 6.0 kg(s), 4.0 x 4.0 x 4.0 cm(s), 8 days, ordered by Pamela Field
+X025, FOR_COLLECTION, 7.0 kg(s), 1.0 x 4.0 x 9.0 cm(s), 9 days, ordered by Lucy Grey
+X386, FOR_COLLECTION, 9.0 kg(s), 1.0 x 6.0 x 5.0 cm(s), 9 days, ordered by Gillian Hamilton
+X285, FOR_COLLECTION, 1.0 kg(s), 4.0 x 3.0 x 1.0 cm(s), 10 days, ordered by Jo Hill
+X904, FOR_COLLECTION, 4.0 kg(s), 1.0 x 4.0 x 9.0 cm(s), 15 days, ordered by Judy Hilman
+X733, FOR_COLLECTION, 6.0 kg(s), 6.0 x 5.0 x 7.0 cm(s), 11 days, ordered by Jack Houston
+X278, FOR_COLLECTION, 5.0 kg(s), 3.0 x 1.0 x 0.0 cm(s), 11 days, ordered by David Hunter
+X316, FOR_COLLECTION, 9.0 kg(s), 5.0 x 4.0 x 0.0 cm(s), 11 days, ordered by Dave Jackson
+X857, FOR_COLLECTION, 2.0 kg(s), 6.0 x 6.0 x 3.0 cm(s), 9 days, ordered by Harry Johnston
+X086, FOR_COLLECTION, 7.0 kg(s), 4.0 x 1.0 x 7.0 cm(s), 13 days, ordered by Tony Lawson
+X746, FOR_COLLECTION, 4.0 kg(s), 4.0 x 9.0 x 5.0 cm(s), 7 days, ordered by Ursula Milton
+X606, FOR_COLLECTION, 8.0 kg(s), 8.0 x 4.0 x 2.0 cm(s), 13 days, ordered by Robert Murray
+X720, FOR_COLLECTION, 4.0 kg(s), 2.0 x 1.0 x 3.0 cm(s), 8 days, ordered by Donald Murray
+X540, FOR_COLLECTION, 9.0 kg(s), 2.0 x 5.0 x 4.0 cm(s), 5 days, ordered by Viola Nicholson
+X020, FOR_COLLECTION, 1.0 kg(s), 1.0 x 6.0 x 4.0 cm(s), 14 days, ordered by Tim Smith
+X782, FOR_COLLECTION, 5.0 kg(s), 3.0 x 2.0 x 7.0 cm(s), 12 days, ordered by Chris Smith
+X475, FOR_COLLECTION, 4.0 kg(s), 3.0 x 8.0 x 1.0 cm(s), 11 days, ordered by Fiona Thoms
+X214, FOR_COLLECTION, 1.0 kg(s), 8.0 x 1.0 x 1.0 cm(s), 15 days, ordered by Susan Turner
+X121, FOR_COLLECTION, 3.0 kg(s), 7.0 x 2.0 x 3.0 cm(s), 6 days, ordered by Lily Watson
+X309, FOR_COLLECTION, 1.0 kg(s), 2.0 x 8.0 x 5.0 cm(s), 11 days, ordered by Helen Webster
+X036, FOR_COLLECTION, 8.0 kg(s), 4.0 x 6.0 x 9.0 cm(s), 12 days, ordered by Peter White
+X213, FOR_COLLECTION, 4.0 kg(s), 8.0 x 5.0 x 2.0 cm(s), 15 days, ordered by Joe Woods
+X507, FOR_COLLECTION, 5.0 kg(s), 3.0 x 9.0 x 8.0 cm(s), 13 days, ordered by Thomas Young
+
+Count of Parcels in Depot with the longest amount of days: 4
+Total Fees Collected: 34.50 £

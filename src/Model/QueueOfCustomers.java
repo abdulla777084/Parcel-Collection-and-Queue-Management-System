@@ -1,4 +1,7 @@
+package Model;
+
 import java.util.*;
+
 public class QueueOfCustomers {
 
     private final LinkedList<Customer> customers;
@@ -7,6 +10,7 @@ public class QueueOfCustomers {
     public QueueOfCustomers() {customers = new LinkedList<>();}
 
     public void addCustomer(Customer customer) {
+        //automatically assigns queue number
         customer.setQueueNumber(nextQueueNumber++);
         customers.add(customer);}
 
@@ -46,6 +50,8 @@ public class QueueOfCustomers {
         return null;
     }
 
+    public LinkedList<Customer> getCustomers() {return customers;}
+
     public String printAllCustomers() {
 
         StringBuilder allCustomers = new StringBuilder();
@@ -58,12 +64,6 @@ public class QueueOfCustomers {
 
         return allCustomers.toString();
     }
-
-    public LinkedList<Customer> getCustomers() {return customers;}
-
-
-
-
 
 
 }

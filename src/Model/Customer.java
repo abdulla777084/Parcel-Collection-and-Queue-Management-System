@@ -1,3 +1,5 @@
+package Model;
+
 public class Customer {
     private int queueNumber;
     private String customerName;
@@ -45,8 +47,4 @@ public class Customer {
 
     @Override
     public String toString() {return queueNumber + ", " + customerName + " " + customerSurname + ", " + parcelId;}
-
-
-
-
 }

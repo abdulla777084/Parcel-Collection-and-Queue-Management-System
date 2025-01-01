@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.TreeSet;
 
 public class ParcelMap {
@@ -21,6 +23,20 @@ public class ParcelMap {
             }
         }
         return null;
+    }
+
+    public TreeSet<Parcel> getParcels() {return parcels;}
+
+    public String printAllParcels() {
+        StringBuilder allParcels = new StringBuilder();
+
+        if(!parcels.isEmpty()) {
+
+            for (Parcel parcel : parcels) { allParcels.append(parcel.toString()).append("\n"); } }
+
+        else { allParcels.append("\n").append("There are no customers in the queue"); }
+
+        return allParcels.toString();
     }
 
     public StringBuilder printAllCollectedParcels() {
@@ -61,27 +77,5 @@ public class ParcelMap {
 
         return allParcelsForCollection;
     }
-
-    public String printAllParcels() {
-        String allParcels = "";
-
-        if(!parcels.isEmpty()) {
-
-            for (Parcel parcel : parcels) { allParcels = allParcels + parcel.toString() + "\n"; } }
-
-        else { allParcels = allParcels +"\n"+"There are no customers in the queue"; }
-
-        return allParcels;
-    }
-
-    public TreeSet<Parcel> getParcels() {return parcels;}
-
-
-
-
-
-
-
-
 }
 
