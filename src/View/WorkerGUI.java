@@ -1,5 +1,6 @@
 package View;
 
+import Log.Log;
 import Model.Customer;
 import Model.Parcel;
 import Controller.Worker;
@@ -11,7 +12,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class WorkerGUI extends JFrame {
-
     private final Worker worker;
     private final JTable tblParcel = new JTable();
     private final JTable tblCustomer = new JTable();
@@ -20,6 +20,7 @@ public class WorkerGUI extends JFrame {
     private final JButton addParcelButton = new JButton("Add Parcel");
     private final JButton addCustomerButton = new JButton("Add Customer");
     private final JButton saveButton = new JButton("Generate Output Report");
+    private final Log log = Log.getInstance();
 
     public WorkerGUI(Worker worker) {
         this.worker = worker;
@@ -180,19 +181,17 @@ public class WorkerGUI extends JFrame {
     /*
         Save reports to text files:
             generate information and save it to a text file when the window is closed or the save button is clicked
-            log is saved when the window is closed
+            log of events is saved when the window is closed
      */
     private void saveReport() {
 
         worker.generateReport("OutputReport.txt");
+        log.saveLogToFile("LogReport.txt");
 
         JOptionPane.showMessageDialog(this,
                 "Successfully saved the operations to the text file(s) ",
                         getTitle(), JOptionPane.INFORMATION_MESSAGE
         );
-
-        //managerMain.saveLog();  //Save the log
-
     }
 
     private class ProcessParcelButtonListener implements ActionListener {
@@ -229,7 +228,7 @@ public class WorkerGUI extends JFrame {
     //Calls saveReport() when the window closes
     private class GUIWindowListener extends WindowAdapter {
         @Override
-        public void windowClosing(WindowEvent e) {saveReport(); }
+        public void windowClosing(WindowEvent e) {saveReport(); log.addEvent("Simulation has ended."); }
     }
 }
 

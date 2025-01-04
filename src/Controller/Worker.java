@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import Log.*;
 
 import java.io.*;
 
@@ -18,7 +19,7 @@ public class Worker {
 
     private double totalFees = 0.0; //keeping track of total fees
 
-    //private final Log log = Log.getInstance();
+    private final Log log = Log.getInstance();
 
     public Worker(QueueOfCustomers queueOfCustomers, ParcelMap parcelMap) {
         this.queueOfCustomers = queueOfCustomers;
@@ -28,11 +29,18 @@ public class Worker {
     public QueueOfCustomers getQueueOfCustomers() {return queueOfCustomers;}
     public ParcelMap getParcelMap() {return parcelMap;}
 
-    public void addNewCustomer(Customer customer) {queueOfCustomers.addCustomer(customer); }
+    public void addNewCustomer(Customer customer) {
+        queueOfCustomers.addCustomer(customer);
+        log.addEvent("New customer added to the queue: " + customer.getFullName() +
+                     ", Parcel Id: " + customer.getParcelId());
+    }
 
-    public void removeCustomer(Customer customer) {queueOfCustomers.removeCustomer(customer); }
+    public void removeCustomer(Customer customer) {queueOfCustomers.removeCustomer(customer);}
 
-    public void addNewParcel(Parcel parcel) {parcelMap.addParcel(parcel); }
+    public void addNewParcel(Parcel parcel) {
+        parcelMap.addParcel(parcel);
+        log.addEvent("New parcel added to the depot: " + parcel.getParcelId());
+    }
 
     public void removeParcel(Parcel parcel) {parcelMap.removeParcel(parcel); }
 
@@ -66,9 +74,13 @@ public class Worker {
 
                     collectParcel(parcel);
 
-                    /**logCollectionEvent(customer, parcel, fee);*/
-
                     removeCustomer(customer);
+
+                    log.addEvent("Customer processed: " + customer.getFullName() +
+                                 ", Parcel with id: " + customer.getParcelId() +
+                                 " was collected" +
+                                 ", Fee: " + String.format("%.2f", fee) + " £"
+                    );
                 }
             }
         }
@@ -130,6 +142,7 @@ public class Worker {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(output);
+            log.addEvent("Report generated: " + filename);
         } catch (IOException e) {e.printStackTrace();}
 
     }
@@ -221,8 +234,4 @@ public class Worker {
         }
         return count;
     }
-
-
-
-
 }

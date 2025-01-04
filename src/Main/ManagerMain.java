@@ -1,6 +1,7 @@
 package Main;
 
 import Controller.Worker;
+import Log.Log;
 import Model.*;
 import View.WorkerGUI;
 
@@ -9,11 +10,12 @@ import java.io.*;
 /*
     Manager class instantiates the QueueOfCustomers, ParcelMap and Worker classes.
     Manager class also has suitable methods to read data from files.
-    Manager class  interacts with the Log Singleton for event tracking.
+    Manager class  interacts with the Log.Log Singleton for event tracking.
 */
 public class ManagerMain {
     private final QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
     private final ParcelMap parcelMap = new ParcelMap();
+    private final Log log = Log.getInstance();
 
     public ManagerMain() {
         read();
@@ -21,11 +23,18 @@ public class ManagerMain {
         Worker worker = new Worker(queueOfCustomers, parcelMap);
 
         new WorkerGUI(worker);
+
+        log.addEvent("Simulation has started.");
     }
 
     private void read() {
         readCustomersFromFile();
+
+
+
         readParcelsFromFile();
+
+
     }
 
     private void readCustomersFromFile() {
@@ -52,6 +61,7 @@ public class ManagerMain {
                 inputLine = reader.readLine();
             }
             reader.close();
+            log.addEvent("Customers loaded from file.");
         } catch(IOException e) {e.printStackTrace();}
     }
 
@@ -90,6 +100,7 @@ public class ManagerMain {
                 inputLine = reader.readLine();
             }
             reader.close();
+            log.addEvent("Parcels loaded from file.");
         } catch (IOException e) {e.printStackTrace();}
 
     }
