@@ -1,23 +1,18 @@
 package View;
 
-import Model.Customer;
-import Controller.Worker;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AddCustomerDialog extends JDialog {
-    private final Worker worker;
     private final JTextField txtCustomerName = new JTextField();
     private final JTextField txtCustomerSurname = new JTextField();
     private final JTextField txtParcelId = new JTextField();
+    private final JButton addButton = new JButton("Add");
+    private final JButton resetButton = new JButton("Reset");
 
-    public AddCustomerDialog(JFrame frame, Worker worker) {
+    public AddCustomerDialog(JFrame frame) {
 
         super(frame, "Add Customer Dialog", true);
-        this.worker = worker;
 
         JPanel pnlCenter = new JPanel(new GridLayout(3, 2));
         JPanel pnlSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -29,13 +24,8 @@ public class AddCustomerDialog extends JDialog {
         pnlCenter.add(new JLabel("Parcel Id:"));
         pnlCenter.add(txtParcelId);
 
-        JButton btnAdd = new JButton("Add");
-        btnAdd.addActionListener(new AddListener());
-        JButton btnReset = new JButton("Reset");
-        btnReset.addActionListener(new ResetListener());
-
-        pnlSouth.add(btnAdd);
-        pnlSouth.add(btnReset);
+        pnlSouth.add(addButton);
+        pnlSouth.add(resetButton);
 
         add(pnlCenter, BorderLayout.CENTER);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -44,61 +34,47 @@ public class AddCustomerDialog extends JDialog {
         setResizable(false);
 
         setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    private void addCustomer() {
-
-        String name = txtCustomerName.getText().trim();
-        String surname = txtCustomerSurname.getText().trim();
-        String parcelId = txtParcelId.getText().trim();
-
-        if (!name.isEmpty() && !surname.isEmpty() && !parcelId.isEmpty()) {
-
-            Customer customer = new Customer(name, surname, parcelId);
-
-            worker.addNewCustomer(customer);
-
-            JOptionPane.showMessageDialog(this,
-                    "Customer added successfully!",
-                            getTitle(), JOptionPane.INFORMATION_MESSAGE
-            );
-
-            dispose();
-        }
-
-        else {
-            JOptionPane.showMessageDialog(this,
-                    "All fields must be filled properly!",
-                            getTitle(), JOptionPane.WARNING_MESSAGE
-            );
-        }
-
 
     }
 
-    private void reset() {
+    public JTextField getTxtCustomerName() { return txtCustomerName; }
+
+    public JTextField getTxtCustomerSurname() { return txtCustomerSurname; }
+
+    public JTextField getTxtParcelId() { return txtParcelId; }
+
+    public JButton getAddButton() { return addButton; }
+
+    public JButton getResetButton() { return resetButton; }
+
+    public void resetAddCustomerDialog() {
+
         txtCustomerName.setText("");
         txtCustomerSurname.setText("");
         txtParcelId.setText("");
     }
 
-    private class AddListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            addCustomer();
-        }
+    public void showCustomerAddedDialog() {
+
+        JOptionPane.showMessageDialog(this,
+                "Customer added successfully!",
+                getTitle(), JOptionPane.INFORMATION_MESSAGE
+        );
+
+        dispose();
     }
 
-    private class ResetListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            reset();
-        }
+    public void showWrongCustomerDetailsDialog() {
+        JOptionPane.showMessageDialog(this,
+                "All fields must be filled properly!",
+                getTitle(), JOptionPane.WARNING_MESSAGE
+        );
     }
+
+
+
+
+
+
 }
 

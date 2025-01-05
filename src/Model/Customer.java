@@ -31,7 +31,7 @@ public class Customer {
 
     public void setParcelId(String parcelId) {this.parcelId = parcelId;}
 
-    //without queueNumber and parcelId
+    //Without queueNumber and parcelId
     @Override
     public boolean equals(Object obj)
     {

@@ -2,16 +2,16 @@ package View;
 
 import Model.Customer;
 import Model.Parcel;
-import Controller.Worker;
 import Model.ParcelStatus;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+
 
 public class AddParcelDialog  extends JDialog {
-    private final Worker worker;
     private final JTextField txtParcelId = new JTextField();
+    private final JButton addButton = new JButton("Add");
+    private final JButton resetButton = new JButton("Reset");
     private final JSpinner spnStatus = new JSpinner(new SpinnerListModel(ParcelStatus.values()));
     private final JSpinner spnWeight = new JSpinner(new SpinnerNumberModel(1D, .1, 100D, 1D));
     private final JSpinner spnLength = new JSpinner(new SpinnerNumberModel(1D, .1, 100D, 1D));
@@ -19,9 +19,8 @@ public class AddParcelDialog  extends JDialog {
     private final JSpinner spnHeight = new JSpinner(new SpinnerNumberModel(1D, .1, 100D, 1D));
     private final JSpinner spnDaysInDepot = new JSpinner(new SpinnerNumberModel(1, 1, 30, 1));
 
-    public AddParcelDialog(WorkerGUI workerGui, Worker worker) {
-        super(workerGui, "Add Parcel Dialog", true);
-        this.worker = worker;
+    public AddParcelDialog(JFrame frame) {
+        super(frame, "Add Parcel Dialog", true);
 
         JPanel pnlCenter = new JPanel(new GridLayout(7, 2));
         JPanel pnlSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -41,13 +40,8 @@ public class AddParcelDialog  extends JDialog {
         pnlCenter.add(new JLabel("Days In Depot:"));
         pnlCenter.add(spnDaysInDepot);
 
-        JButton btnAdd = new JButton("Add");
-        btnAdd.addActionListener(new AddListener());
-        JButton btnReset = new JButton("Reset");
-        btnReset.addActionListener(new ResetListener());
-
-        pnlSouth.add(btnAdd);
-        pnlSouth.add(btnReset);
+        pnlSouth.add(addButton);
+        pnlSouth.add(resetButton);
 
         add(pnlCenter, BorderLayout.CENTER);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -56,63 +50,29 @@ public class AddParcelDialog  extends JDialog {
         setResizable(false);
 
         setLocationRelativeTo(null);
-        setVisible(true);
+
+
     }
 
-    private void addParcel() {
+    public JTextField getTxtParcelId() {return txtParcelId;}
 
-        String parcelId = txtParcelId.getText().trim();
-        ParcelStatus status = (ParcelStatus) spnStatus.getValue();
-        double weight = (double) spnWeight.getValue();
-        double length = (double) spnLength.getValue();
-        double width = (double) spnWidth.getValue();
-        double height = (double) spnHeight.getValue();
-        int daysInDepot = (int) spnDaysInDepot.getValue();
+    public JSpinner getSpnStatus() {return spnStatus;}
 
-        if (!parcelId.isEmpty() && status != null
-                                && weight > 0
-                                && length > 0
-                                && width > 0
-                                && height > 0
-                                && daysInDepot > 0) {
+    public JSpinner getSpnWeight() {return spnWeight;}
 
-            Customer customer = worker.getQueueOfCustomers().searchForCustomerByParcelId(txtParcelId.getText());
+    public JSpinner getSpnLength() {return spnLength;}
 
-            if (customer != null) {
-                Parcel parcel = new Parcel(
-                        parcelId,
-                        status,
-                        weight,
-                        length,
-                        width,
-                        height,
-                        daysInDepot,
-                        customer
-                );
+    public JSpinner getSpnWidth() {return spnWidth;}
 
-                worker.addNewParcel(parcel);
+    public JSpinner getSpnHeight() {return spnHeight;}
 
-                JOptionPane.showMessageDialog(this,
-                        "Parcel added successfully!",
-                        getTitle(), JOptionPane.INFORMATION_MESSAGE);
+    public JSpinner getSpnDaysInDepot() {return spnDaysInDepot;}
 
-                this.dispose();
+    public JButton getAddButton() {return addButton;}
 
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Customer with parcel id " +
-                                parcelId + " doesn't exist!",
-                        getTitle(), JOptionPane.WARNING_MESSAGE);
-            }
+    public JButton getResetButton() {return resetButton;}
 
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "All fields must be filled properly!",
-                    getTitle(), JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    private void reset() {
+    public void resetAddParcelDialog() {
         txtParcelId.setText("");
         spnStatus.setValue(ParcelStatus.FOR_COLLECTION);
         spnWeight.setValue(1D);
@@ -122,18 +82,33 @@ public class AddParcelDialog  extends JDialog {
         spnDaysInDepot.setValue(1);
     }
 
-    private class AddListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            addParcel();
-        }
+    public void showParcelAddedDialog() {
+
+        JOptionPane.showMessageDialog(this,
+                "Parcel added successfully!",
+                getTitle(), JOptionPane.INFORMATION_MESSAGE
+        );
+
+
+        dispose();
     }
 
-    private class ResetListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            reset();
-        }
+    public void showCustomerNotFoundDialog() {
+
+        JOptionPane.showMessageDialog(this,
+                "Customer with the given parcel Id doesn't exist!",
+                getTitle(), JOptionPane.WARNING_MESSAGE
+        );
+
+    }
+
+    public void showWrongParcelDetailsDialog() {
+
+        JOptionPane.showMessageDialog(this,
+                "All fields must be filled properly!",
+                getTitle(), JOptionPane.WARNING_MESSAGE
+        );
+
     }
 
 }

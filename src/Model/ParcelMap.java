@@ -12,8 +12,6 @@ public class ParcelMap {
 
     public void removeParcel(Parcel parcel) {if (parcel != null) {parcels.remove(parcel);}}
 
-    public int getNumberOfParcels() {return parcels.size();}
-
     public Parcel searchParcelByParcelId(String parcelId) {
         for (Parcel parcel : parcels) {
 
@@ -27,17 +25,6 @@ public class ParcelMap {
 
     public TreeSet<Parcel> getParcels() {return parcels;}
 
-    public String printAllParcels() {
-        StringBuilder allParcels = new StringBuilder();
-
-        if(!parcels.isEmpty()) {
-
-            for (Parcel parcel : parcels) { allParcels.append(parcel.toString()).append("\n"); } }
-
-        else { allParcels.append("\n").append("There are no customers in the queue"); }
-
-        return allParcels.toString();
-    }
 
     public StringBuilder printAllCollectedParcels() {
         StringBuilder allCollectedParcels = new StringBuilder();
@@ -77,5 +64,18 @@ public class ParcelMap {
 
         return allParcelsForCollection;
     }
+
+    public String printAllParcels() {
+        StringBuilder allParcels = new StringBuilder();
+
+        if(!parcels.isEmpty()) {
+
+            for (Parcel parcel : parcels) { allParcels.append(parcel.toString()).append("\n"); } }
+
+        else { allParcels.append("\n").append("There are no customers in the queue"); }
+
+        return allParcels.toString();
+    }
+
 }
 

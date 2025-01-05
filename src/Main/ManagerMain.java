@@ -1,16 +1,15 @@
 package Main;
 
-import Controller.Worker;
+import Controller.WorkerController;
 import Log.Log;
 import Model.*;
 import View.WorkerGUI;
-
 import java.io.*;
 
 /*
     Manager class instantiates the QueueOfCustomers, ParcelMap and Worker classes.
     Manager class also has suitable methods to read data from files.
-    Manager class  interacts with the Log.Log Singleton for event tracking.
+    Manager class  interacts with the Log Singleton for event tracking.
 */
 public class ManagerMain {
     private final QueueOfCustomers queueOfCustomers = new QueueOfCustomers();
@@ -22,19 +21,16 @@ public class ManagerMain {
 
         Worker worker = new Worker(queueOfCustomers, parcelMap);
 
-        new WorkerGUI(worker);
+        WorkerGUI workerGui = new WorkerGUI(worker);
+
+        new WorkerController(worker, workerGui);
 
         log.addEvent("Simulation has started.");
     }
 
     private void read() {
         readCustomersFromFile();
-
-
-
         readParcelsFromFile();
-
-
     }
 
     private void readCustomersFromFile() {
@@ -110,34 +106,16 @@ public class ManagerMain {
 
     }
 
-
-
-    /*
-    //saveLog to text file = write the event log to file
-    private void logCollectionEvent(Model.Customer customer, Model.Parcel parcel, double fee) {
-        String logMessage = String.format("Model.Customer %s %s collected parcel %s. Fee: %.2f", customer.toString(), fee);
-
-        writeLogToFile("logFile.txt", logMessage);
-    }
-
-    private void writeLogToFile(String fileName, String message) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(message);
-            writer.newLine();
-        } catch (IOException e) {e.printStackTrace();}
-    }
-    */
-
 }
 
     /*
     //OLD TEST DATA for Main class for Console Output tests before View.WorkerGUI
 
-    //read & write data from files
+    //Read & write data from files
     queueOfCustomers.readFromFile(new File("Custs.csv"));
     parcelMap.readFromFile(new File("Parcels.csv"), queueOfCustomers);
 
-    //place somewhere else
+    //Place somewhere else
     Model.Customer customer1 = new Model.Customer(1,"Ivan","Ivanov","X345");
     Model.Customer customer2 = new Model.Customer(2,"Petr","Petrov","X567");
     Model.Customer customer3 = new Model.Customer(3,"Vasily","Vasilev","X238");

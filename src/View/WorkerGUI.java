@@ -1,9 +1,8 @@
 package View;
 
-import Log.Log;
 import Model.Customer;
 import Model.Parcel;
-import Controller.Worker;
+import Model.Worker;
 import Model.ParcelStatus;
 
 import javax.swing.*;
@@ -20,17 +19,13 @@ public class WorkerGUI extends JFrame {
     private final JButton addParcelButton = new JButton("Add Parcel");
     private final JButton addCustomerButton = new JButton("Add Customer");
     private final JButton saveButton = new JButton("Generate Output Report");
-    private final Log log = Log.getInstance();
 
     public WorkerGUI(Worker worker) {
         this.worker = worker;
 
         setTitle("Parcel Depot Management System");
-        setSize(1800, 620);
-
+        setSize(1750, 620);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addWindowListener(new GUIWindowListener());
-
         setLayout(new BorderLayout());
 
         JPanel customerPanel = new JPanel(new BorderLayout());
@@ -51,11 +46,6 @@ public class WorkerGUI extends JFrame {
 
         JPanel southPanel = new JPanel();
 
-        processCustomerButton.addActionListener(new ProcessParcelButtonListener());
-        addCustomerButton.addActionListener(new AddCustomerButtonListener());
-        addParcelButton.addActionListener(new AddParcelButtonListener());
-        saveButton.addActionListener(new SaveButtonListener());
-
         southPanel.add(currentParcelLabel);
         southPanel.add(processCustomerButton);
         southPanel.add(addCustomerButton);
@@ -72,21 +62,25 @@ public class WorkerGUI extends JFrame {
         add(listsPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
 
-        updatePanels();
+        updatePanels(); //Populates tables
 
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    private void updatePanels() {
+    public JButton getProcessCustomerButton() {return processCustomerButton;}
+
+    public JButton getAddCustomerButton() {return addCustomerButton;}
+
+    public JButton getAddParcelButton() {return addParcelButton;}
+
+    public JButton getSaveButton() {return saveButton;}
+
+    public void updatePanels() {
 
         setCustomerTableModel();
         setParcelTableModel();
-
-        Parcel currentParcel = worker.getCurrentParcel();
-
-        //Used HTML tags to make the output more readable
-        currentParcelLabel.setText("<html><b>Current Parcel Details:</b> " + currentParcel + "</html>");
+        setCurrentParcelLabel();
     }
 
     private void setCustomerTableModel() {
@@ -140,53 +134,38 @@ public class WorkerGUI extends JFrame {
         tblParcel.setModel(model);
     }
 
-    private void processCustomer() {
-
-        //All the validations for customer and parcel are implemented within the processCustomer method
-        worker.processCustomer();
+    private void setCurrentParcelLabel() {
 
         Parcel currentParcel = worker.getCurrentParcel();
 
-        if (currentParcel != null) {
-
-            double collectionFee = worker.calculateFee(currentParcel);
-
+        if (currentParcel != null && currentParcel.getStatus() == ParcelStatus.FOR_COLLECTION) {
             //Used HTML tags to make the output more readable
-            JOptionPane.showMessageDialog(this,
-                    "<html><b>Parcel:</b> " + currentParcel +
-                            "<br>" + "<br>" +"<b>Collection fee:</b> " +
-                            collectionFee + " £</html>",
-                            getTitle(), JOptionPane.INFORMATION_MESSAGE
-            );
-
+            currentParcelLabel.setText("<html><b>Current Parcel Details:</b> " + currentParcel + "</html>");
         }
-
         else {
-
-            JOptionPane.showMessageDialog(this,
-                    "No current parcel to process! All parcels have been collected.",
-                            getTitle(), JOptionPane.WARNING_MESSAGE
-            );
+            currentParcelLabel.setText("No current parcel to process. All parcels have been collected.");
         }
     }
 
-    private void addCustomer() {
-        new AddCustomerDialog(this,worker);
-        addParcelButton.setEnabled(true);} //Enable button that worker clicks on to add a new parcel
+    public void showProcessCustomerDialog(Parcel currentParcel, double collectionFee) {
 
-    private void addParcel() {
-        new AddParcelDialog(this,worker);
-        addParcelButton.setEnabled(false);} //Disable button that worker clicks on to add a new parcel
+        //Used HTML tags to make the output more readable
+        JOptionPane.showMessageDialog(this,
+                "<html><b>Parcel:</b> " + currentParcel +
+                        "<br>" + "<br>" +"<b>Collection fee:</b> " +
+                        collectionFee + " £</html>",
+                        getTitle(), JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 
-    /*
-        Save reports to text files:
-            generate information and save it to a text file when the window is closed or the save button is clicked
-            log of events is saved when the window is closed
-     */
-    private void saveReport() {
+    public void showNoCurrentParcelDialog() {
+        JOptionPane.showMessageDialog(this,
+                "No current parcel to process! All parcels have been collected.",
+                getTitle(), JOptionPane.WARNING_MESSAGE
+        );
+    }
 
-        worker.generateReport("OutputReport.txt");
-        log.saveLogToFile("LogReport.txt");
+    public void showSaveReportDialog() {
 
         JOptionPane.showMessageDialog(this,
                 "Successfully saved the operations to the text file(s) ",
@@ -194,41 +173,6 @@ public class WorkerGUI extends JFrame {
         );
     }
 
-    private class ProcessParcelButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            processCustomer();
-            updatePanels();
-        }
-    }
 
-    private class SaveButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            saveReport();
-        }
-    }
-
-    private class AddCustomerButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            addCustomer();
-            updatePanels();
-        }
-    }
-
-    private class AddParcelButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            addParcel();
-            updatePanels();
-        }
-    }
-
-    //Calls saveReport() when the window closes
-    private class GUIWindowListener extends WindowAdapter {
-        @Override
-        public void windowClosing(WindowEvent e) {saveReport(); log.addEvent("Simulation has ended."); }
-    }
 }
 

@@ -10,15 +10,27 @@ public class QueueOfCustomers {
     public QueueOfCustomers() {customers = new LinkedList<>();}
 
     public void addCustomer(Customer customer) {
-        //automatically assigns queue number
+        //Automatically assigns queue number
         customer.setQueueNumber(nextQueueNumber++);
-        customers.add(customer);}
+        customers.add(customer);
+    }
 
     public void removeCustomer(Customer customer) {
         if (customer != null) {
-            customers.remove(customer);}}
+            customers.remove(customer);
+        }
+    }
 
-    public int getNumberOfParcels() {return customers.size();}
+    public Customer searchForCustomerByParcelId(String parcelId) {
+        for (Customer customer : customers) {
+            if (customer.getParcelId().equals(parcelId)) {
+                return customer;
+            }
+        }
+        return null;
+    }
+
+    public LinkedList<Customer> getCustomers() {return customers;}
 
     public StringBuilder searchByName(String name) {
 
@@ -38,19 +50,7 @@ public class QueueOfCustomers {
         else { result.append("\n" + "There is no such customer in the queue"); }
 
         return result;
-
     }
-
-    public Customer searchForCustomerByParcelId(String parcelId) {
-        for (Customer customer : customers) {
-            if (customer.getParcelId().equals(parcelId)) {
-                return customer;
-            }
-        }
-        return null;
-    }
-
-    public LinkedList<Customer> getCustomers() {return customers;}
 
     public String printAllCustomers() {
 
@@ -64,8 +64,6 @@ public class QueueOfCustomers {
 
         return allCustomers.toString();
     }
-
-
 }
 
 

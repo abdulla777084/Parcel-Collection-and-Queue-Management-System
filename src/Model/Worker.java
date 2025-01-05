@@ -1,16 +1,14 @@
-package Controller;
+package Model;
 
-import Model.*;
 import Log.*;
-
 import java.io.*;
 
 /*
-   Worker class is the Controller class,
-       that contains the business logic of a worker for:
+   Worker class contains the business logic of a worker for:
            processing a customer,
            calculating the fee,
-           and releasing the parcel
+           releasing the parcel,
+           generating report with counts and totals
 */
 public class Worker {
     private final QueueOfCustomers queueOfCustomers;
@@ -41,8 +39,6 @@ public class Worker {
         parcelMap.addParcel(parcel);
         log.addEvent("New parcel added to the depot: " + parcel.getParcelId());
     }
-
-    public void removeParcel(Parcel parcel) {parcelMap.removeParcel(parcel); }
 
     /*
        Process a customer:
